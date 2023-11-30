@@ -52,9 +52,9 @@ public class DBDM {
     }
 
     public static void main(String[] args) throws SQLException {
-        DBDM dbdm=new DBDM();
-        List<Currency> currencyList=new ArrayList<>();
-        currencyList=dbdm.loadCurrency();
+        DBDM dbdm = new DBDM();
+        List<Currency> currencyList = new ArrayList<>();
+        currencyList = dbdm.loadCurrency();
         for (Currency currency : currencyList) {
             System.out.println(currency);
         }
