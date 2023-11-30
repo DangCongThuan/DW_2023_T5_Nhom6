@@ -65,7 +65,7 @@ body {
     background: #FFF;
     width: 240px;
     display: none;
-  
+
 }
 .page header  .menu:hover .list_items  {
     display: block;
@@ -75,14 +75,14 @@ body {
     align-items: center;
     display: flex;
     padding-left: 10px;
-    
+
 }
 .page header .menu .list_items a {
     text-decoration: none;
     font-size: 20px;
     color:#1F507E ;
     font-weight: 700;
-    
+
 }
 .page header .menu .list_items .bank:hover{
     background-color: rgba(31, 80, 126, 0.268);;

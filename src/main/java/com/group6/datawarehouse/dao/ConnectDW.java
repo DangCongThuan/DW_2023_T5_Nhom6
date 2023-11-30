@@ -71,6 +71,14 @@ public class ConnectDW implements IConnect {
         this.password = password;
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
     public static void main(String[] args) {
         ConnectDW connectDW = new ConnectDW();
         System.out.println(connectDW.connectToMySQL());
