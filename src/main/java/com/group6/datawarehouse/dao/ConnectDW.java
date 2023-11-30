@@ -2,6 +2,7 @@ package com.group6.datawarehouse.dao;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -14,9 +15,10 @@ public class ConnectDW implements IConnect {
 
     public ConnectDW() {
         {
-            try {
-                // Load file cấu hình từ classpath hoặc đường dẫn tuyệt đối
-                properties.load(new FileInputStream("database.properties"));
+            String resourceName = "database.properties"; // could also be a constant
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            try  (InputStream resourceStream = loader.getResourceAsStream(resourceName)) {
+                properties.load(resourceStream);
                 this.setUrl(properties.getProperty("urlDW"));
                 this.setUserName(properties.getProperty("usernameDW"));
                 this.setPassword(properties.getProperty("passwordDW"));
@@ -71,6 +73,7 @@ public class ConnectDW implements IConnect {
 
     public static void main(String[] args) {
         ConnectDW connectDW = new ConnectDW();
+        System.out.println(connectDW.connectToMySQL());
         System.out.println(connectDW.url + connectDW.userName + connectDW.password);
     }
 }

@@ -2,6 +2,7 @@ package com.group6.datawarehouse.dao;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -14,9 +15,10 @@ public class ConnectStaging implements IConnect {
 
     public ConnectStaging() {
         {
-            try {
-                // Load file cấu hình từ classpath hoặc đường dẫn tuyệt đối
-                properties.load(new FileInputStream("database.properties"));
+            String resourceName = "database.properties"; // could also be a constant
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            try  (InputStream resourceStream = loader.getResourceAsStream(resourceName)) {
+                properties.load(resourceStream);
                 this.setUrl(properties.getProperty("urlStaging"));
                 this.setUserName(properties.getProperty("usernameStaging"));
                 this.setPassword(properties.getProperty("passwordStaging"));
