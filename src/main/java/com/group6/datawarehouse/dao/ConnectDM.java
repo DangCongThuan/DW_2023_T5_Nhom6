@@ -72,8 +72,18 @@ public class ConnectDM implements IConnect {
         this.password = password;
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
     public static void main(String[] args) {
         ConnectDM connectDM=new ConnectDM();
         System.out.println(connectDM.url +connectDM.userName+connectDM.password);
+
+        connectDM.connectToMySQL();
     }
 }
