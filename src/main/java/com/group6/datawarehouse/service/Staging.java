@@ -1,9 +1,6 @@
 package com.group6.datawarehouse.service;
 
-
-
 import com.group6.datawarehouse.dao.ConnectStaging;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,11 +10,11 @@ public class Staging {
     static ConnectStaging connectStaging = new ConnectStaging();
 
     public void loadStaging() {
-        // Buoc 1: Kết nối đến database
+        // Buoc 1: Kết nối đến database Database Staging
         try (Connection connection = connectStaging.connectToMySQL()) {
-            System.out.println("Đã kết nối đến MySQL.");
+            System.out.println("Đã kết nối đến Database Staging.");
 
-            // Buoc 2: Tạo một truy vấn SQL
+            // Buoc 2: Tạo truy vấn SQL
             String sqlQuery = "SELECT * FROM tghd_staging";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
 
@@ -38,7 +35,7 @@ public class Staging {
                         String sale_cash = resultSet.getString("sale_cash");
                         String sale_transfer = resultSet.getString("sale_transfer");
 
-                        // In ra màn hình hoặc xử lý dữ liệu theo nhu cầu của bạn
+                        // In ra màn hình
                         System.out.println(id + ", " + source + ", " + get_date + ", " + date_time + ", " + currency_symbol + ", "
                                 + currency_name + ", " + buy_cash + ", " + buy_transfer + ", " + sale_cash + ", " + sale_transfer);
                     }
@@ -48,6 +45,7 @@ public class Staging {
             System.err.println("Error: " + e.getMessage());
         }
     }
+
     public static void main(String[] args) {
         Staging staging = new Staging();
         staging.loadStaging();
