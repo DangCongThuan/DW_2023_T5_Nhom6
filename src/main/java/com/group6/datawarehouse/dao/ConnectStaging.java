@@ -15,9 +15,11 @@ public class ConnectStaging implements IConnect {
 
     public ConnectStaging() {
         {
-            String resourceName = "database.properties"; // could also be a constant
+            // Cau hinh properties
+            String resourceName = "database.properties";
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             try  (InputStream resourceStream = loader.getResourceAsStream(resourceName)) {
+                // Load cau hinh tu properties
                 properties.load(resourceStream);
                 this.setUrl(properties.getProperty("urlStaging"));
                 this.setUserName(properties.getProperty("usernameStaging"));
@@ -28,6 +30,7 @@ public class ConnectStaging implements IConnect {
         }
     }
 
+    // Tao ket noi den database
     @Override
     public Connection connectToMySQL() {
         connection = null;
@@ -39,14 +42,13 @@ public class ConnectStaging implements IConnect {
             // Tạo kết nối
             connection = DriverManager.getConnection( url, userName, password);
             System.out.println("Đã kết nối đến MySQL.");
-
         } catch (ClassNotFoundException | SQLException e) {
             System.err.println("Error connecting to the database: " + e.getMessage());
         }
-
         return connection;
     }
 
+    // Dong ket noi den database
     @Override
     public void closeConnection() {
         try {
