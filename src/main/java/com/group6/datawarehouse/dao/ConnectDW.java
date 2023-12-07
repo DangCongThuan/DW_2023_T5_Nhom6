@@ -1,6 +1,5 @@
 package com.group6.datawarehouse.dao;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
