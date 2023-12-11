@@ -1,6 +1,5 @@
 package com.group6.datawarehouse.dao;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -41,9 +40,9 @@ public class ConnectStaging implements IConnect {
 
             // Tạo kết nối
             connection = DriverManager.getConnection( url, userName, password);
-            System.out.println("Đã kết nối đến MySQL.");
+            System.out.println("Đã kết nối đến Staging.");
         } catch (ClassNotFoundException | SQLException e) {
-            System.err.println("Error connecting to the database: " + e.getMessage());
+            System.err.println("Error connecting to the database Control: " + e.getMessage());
         }
         return connection;
     }
@@ -54,10 +53,10 @@ public class ConnectStaging implements IConnect {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                System.out.println("Đã đóng kết nối đến MySQL.");
+                System.out.println("Đã đóng kết nối đến Staging.");
             }
         } catch (SQLException e) {
-            System.err.println("Error closing to the database: " + e.getMessage());
+            System.err.println("Error closing to the database Staging: " + e.getMessage());
         }
     }
 
