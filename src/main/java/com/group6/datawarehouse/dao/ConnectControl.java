@@ -1,6 +1,5 @@
 package com.group6.datawarehouse.dao;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -15,19 +14,22 @@ public class ConnectControl implements IConnect {
 
     public ConnectControl() {
         {
-            String resourceName = "database.properties"; // could also be a constant
+            // Cau hinh properties
+            String resourceName = "database.properties";
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             try  (InputStream resourceStream = loader.getResourceAsStream(resourceName)) {
+                // Load cau hinh tu properties
                 properties.load(resourceStream);
                 this.setUrl(properties.getProperty("urlControl"));
                 this.setUserName(properties.getProperty("usernameControl"));
                 this.setPassword(properties.getProperty("passwordControl"));
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Error config properties to the database: " + e.getMessage());
             }
         }
     }
 
+    // Tao ket noi den database
     @Override
     public Connection connectToMySQL() {
         connection = null;
@@ -38,11 +40,10 @@ public class ConnectControl implements IConnect {
 
             // Tạo kết nối
             connection = DriverManager.getConnection(url, userName, password);
-
+            System.out.println("Đã kết nối đến Control.");
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            System.err.println("Error connecting to the database Control: " + e.getMessage());
         }
-
         return connection;
     }
 
@@ -51,10 +52,10 @@ public class ConnectControl implements IConnect {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                System.out.println("Đã đóng kết nối đến MySQL.");
+                System.out.println("Đã đóng kết nối đến Control.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Error closing to the database Control: " + e.getMessage());
         }
     }
 
@@ -74,5 +75,6 @@ public class ConnectControl implements IConnect {
     public static void main(String[] args) {
         ConnectControl connectControl = new ConnectControl();
         System.out.println(connectControl.url + connectControl.userName + connectControl.password);
+        System.out.println(connectControl.connectToMySQL());
     }
 }
