@@ -15,6 +15,7 @@
 </head>
 
 <body>
+
 <div class="page">
     <div class="logo_currency max_w_website">
         <div class="logo">
@@ -95,7 +96,7 @@
             titleElement.innerHTML = 'Tỷ giá ACB ';
         }
         var xhr = new XMLHttpRequest();
-        var url = "HomeEx?bank=" + selectedBank + "&date=" + selectedDate;
+        var url = "/DataWarehouse_war/HomeEx?bank=" + selectedBank + "&date=" + selectedDate;
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 var data = xhr.responseText;
@@ -158,7 +159,7 @@
         // Gọi Ajax hoặc chuyển giá trị ngày vào một biểu mẫu để gửi lên server
         // Ví dụ sử dụng Ajax:
         var xhr = new XMLHttpRequest();
-        var url = "HomeEx?date=" + selectedDate + "&bank=" + selectedBank;
+        var url = "/DataWarehouse_war/HomeEx?date=" + selectedDate + "&bank=" + selectedBank;
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 var data = xhr.responseText;
@@ -173,7 +174,17 @@
         xhr.send();
 
     }
+    $(document).ready(function () {
+        // Kiểm tra xem có dữ liệu trong sessionStorage không
+        var storedBank = sessionStorage.getItem("bank");
+        var storedDate = sessionStorage.getItem("date");
 
+        // Nếu có dữ liệu, khôi phục trạng thái trước đó
+        if (storedBank && storedDate) {
+            updateBankInfo(storedBank);
+            updateDateInfo(storedDate);
+        }
+    });
 </script>
 </body>
 
