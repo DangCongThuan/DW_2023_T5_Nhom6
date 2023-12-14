@@ -1,6 +1,6 @@
 CREATE TABLE dim_currency 
 (
-	Id INT auto_increment primary key,
+	id INT auto_increment primary key,
     currency_code	VARCHAR(50),
     currency_name	VARCHAR(50),
     currency_symbol	VARCHAR(50)

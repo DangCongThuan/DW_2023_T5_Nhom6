@@ -1,6 +1,6 @@
 CREATE TABLE dim_bank 
 (
-	Id INT auto_increment primary key,
+	id INT auto_increment primary key,
     bank_name	VARCHAR(200),
     bank_code	VARCHAR(50),
     country_id	INT
