@@ -2,10 +2,8 @@ package com.group6.datawarehouse.service;
 
 import com.group6.datawarehouse.dao.ConnectControl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.Date;
 
 public class ControlService {
     public static void insertLog(int configID, String status, String description) {
@@ -51,5 +49,37 @@ public class ControlService {
         }
 
         return false;
+    }
+    public static boolean checkValidProcess(int configId, String status) {
+        try (Connection connection = new ConnectControl().connectToMySQL()) {
+            // Truy vấn SQL để kiểm tra trạng thái quá trình
+            String selectQuery = "SELECT * FROM log WHERE config_id = ? AND status = ? AND DATE(time) = CURRENT_DATE() ORDER BY time DESC LIMIT 1";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+                // Thêm các giá trị vào truy vấn
+                preparedStatement.setInt(1, configId);
+                preparedStatement.setString(2, status);
+
+                // Thực hiện truy vấn kiểm tra trạng thái quá trình
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        Timestamp latestTime = resultSet.getTimestamp("time");
+                        Timestamp currentTime = new Timestamp(new Date().getTime());
+
+                        // Kiểm tra thời gian mới nhất có quá 1 giờ so với thời gian hiện tại hay không
+
+                        return (currentTime.getTime() - latestTime.getTime()) <= (1 * 3 * 60 * 1000);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(checkValidProcess(5, "Crawling"));
     }
 }

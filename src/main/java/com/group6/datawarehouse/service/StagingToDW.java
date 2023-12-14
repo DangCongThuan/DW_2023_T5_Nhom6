@@ -13,29 +13,38 @@ import java.sql.SQLException;
 public class StagingToDW {
 
     public static void main(String[] args) throws SQLException {
-
-        if (ControlService.checkLogExists(5, "Done")) {
-            System.out.println("Hôm nay đã load dữ liệu từ staging sang data warehouse");
-            return;
-        }
-        ControlService.insertLog(5, "Prepared", "Chuẩn bị load dữ liệu từ staging vào data warehouse");
-        Connection connectStaging = new ConnectStaging().connectToMySQL();
-        Connection connectDW = new ConnectDW().connectToMySQL();
-        connectDW.setAutoCommit(false);
-        try {
-            ControlService.insertLog(5, "Crawling", "Đang load dữ liệu từ staging vào data warehouse");
-            // Load dữ liệu từ bảng staging vào bảng data warehouse
-            loadStagingToDataWarehouse(connectStaging, connectDW);
-            ControlService.insertLog(5, "Done", "Load dữ liệu từ staging vào data warehouse thành công");
-        } catch (SQLException e) {
-            connectDW.rollback();
-            ControlService.insertLog(5, "Error", "Chuẩn bị load dữ liệu từ staging vào data warehouse");
-            e.printStackTrace();
-        } finally {
-            connectDW.setAutoCommit(true);
-            // Đóng kết nối
-            closeConnection(connectStaging);
-            closeConnection(connectDW);
+        while(true) {
+            if (ControlService.checkLogExists(5, "Done")) {
+                System.out.println("Hôm nay đã load dữ liệu từ staging sang data warehouse");
+                return;
+            }
+            if (ControlService.checkValidProcess(5, "Crawling")) {
+                try {
+                    System.out.println("Chương trình đang thực hiện load dữ liệu, xin vui lòng chờ 1 tiếng");
+                    Thread.sleep(60 * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            ControlService.insertLog(5, "Prepared", "Chuẩn bị load dữ liệu từ staging vào data warehouse");
+            Connection connectStaging = new ConnectStaging().connectToMySQL();
+            Connection connectDW = new ConnectDW().connectToMySQL();
+            connectDW.setAutoCommit(false);
+            try {
+                ControlService.insertLog(5, "Crawling", "Đang load dữ liệu từ staging vào data warehouse");
+                // Load dữ liệu từ bảng staging vào bảng data warehouse
+                loadStagingToDataWarehouse(connectStaging, connectDW);
+                ControlService.insertLog(5, "Done", "Load dữ liệu từ staging vào data warehouse thành công");
+            } catch (SQLException e) {
+                connectDW.rollback();
+                ControlService.insertLog(5, "Error", "Chuẩn bị load dữ liệu từ staging vào data warehouse");
+                e.printStackTrace();
+            } finally {
+                connectDW.setAutoCommit(true);
+                // Đóng kết nối
+                closeConnection(connectStaging);
+                closeConnection(connectDW);
+            }
         }
     }
 
