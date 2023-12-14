@@ -1,12 +1,12 @@
 CREATE TABLE dim_country 
 (
-	Id INT auto_increment primary key,
+	id INT auto_increment primary key,
     country_code	VARCHAR(512),
     country_name	VARCHAR(512),
     region	VARCHAR(512)
 );
 
-INSERT INTO dim_country (country_code, country_name, redim_currencygion) VALUES
+INSERT INTO dim_country (country_code, country_name, region) VALUES
 	('USA', 'United States', 'North America'),
 	('CHN', 'China', 'Asia'),
 	('IND', 'India', 'Asia'),
