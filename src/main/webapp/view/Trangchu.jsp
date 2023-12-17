@@ -29,10 +29,10 @@
                                                             style="height: 18px;"></i></span>
             <div class="list_items">
                 <div class="vcb bank">
-                    <a class="vcb" href="#" onclick="updateBankInfo('vcb')">Tỷ giá Vietcombank</a>
+                    <a class="vcb" href="#" onclick="updateBankInfo('VCB')">Tỷ giá Vietcombank</a>
                 </div>
                 <div class="tcb bank">
-                    <a href="#" onclick="updateBankInfo('acb')">Tỷ giá ACB</a>
+                    <a href="#" onclick="updateBankInfo('ACB')">Tỷ giá ACB</a>
                 </div>
             </div>
         </div>
@@ -90,9 +90,9 @@
         var selectedDate = sessionStorage.getItem("date");
         // Cập nhật thông tin ngân hàng trên trang web
         var titleElement = document.getElementById('exchangeRateTitle');
-        if (selectedBank === 'vcb') {
+        if (selectedBank === 'VCB') {
             titleElement.innerHTML = 'Tỷ giá Vietcombank';
-        } else if (selectedBank === 'acb') {
+        } else if (selectedBank === 'ACB') {
             titleElement.innerHTML = 'Tỷ giá ACB ';
         }
         var xhr = new XMLHttpRequest();

@@ -18,7 +18,7 @@ public class DBDM {
     public List<Currency> loadCurrency(String selectedBank,String selectedDate) throws SQLException {
         List<Currency> currencyList = new ArrayList<>();
 
-        String query = "SELECT *FROM dim WHERE bank_name=? AND date=?";
+        String query = "SELECT *FROM dim WHERE bank_code=? AND date=?";
         iConnect = new ConnectDM();
         connection = iConnect.connectToMySQL();
         ps = connection.prepareStatement(query);
@@ -30,14 +30,14 @@ public class DBDM {
             currencyList.add(new Currency(
                     rs.getInt("id_dim"),
                     rs.getString("date"),
-                    rs.getString("date_time"),
-                    rs.getString("bank_name"),
-                    rs.getString("currency_symbol"),
+                    rs.getString("time"),
+                    rs.getString("bank_code"),
+                    rs.getString("currency_code"),
                     rs.getString("currency_name"),
-                    rs.getDouble("buy_cash"),
-                    rs.getDouble("buy_Transfer"),
-                    rs.getDouble("sale_Cash"),
-                    rs.getDouble("sale_Transfer")
+                    rs.getString("buy_cash"),
+                    rs.getString("buy_Transfer"),
+                    rs.getString("sale_Cash"),
+                    rs.getString("sale_Transfer")
             ));
         }
 
@@ -56,7 +56,7 @@ public class DBDM {
     public static void main(String[] args) throws SQLException {
         DBDM dbdm=new DBDM();
         List<Currency> currencyList = new ArrayList<>();
-        currencyList = dbdm.loadCurrency("vcb","2023-12-11");
+        currencyList = dbdm.loadCurrency("vcb","2023-1-21");
         for (Currency currency : currencyList) {
             System.out.println(currency);
         }

@@ -12,7 +12,7 @@ public class ConnectDM implements IConnect {
     private String url, userName, password;
     private Connection connection;
 
-    public ConnectDM() {
+    public ConnectDM() {// 1
         {
             String resourceName = "database.properties"; // could also be a constant
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -37,7 +37,7 @@ public class ConnectDM implements IConnect {
 
             // Tạo kết nối
             connection = DriverManager.getConnection( url, userName, password);
-
+            System.out.println("Đã kết nối đến DM");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -50,7 +50,7 @@ public class ConnectDM implements IConnect {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                System.out.println("Đã đóng kết nối đến MySQL.");
+                System.out.println("Đã đóng kết nối đến DM.");
             }
         } catch (SQLException e) {
             e.printStackTrace();

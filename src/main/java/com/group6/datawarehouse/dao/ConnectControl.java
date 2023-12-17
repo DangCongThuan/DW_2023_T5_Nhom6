@@ -12,7 +12,7 @@ public class ConnectControl implements IConnect {
     private String url, userName, password;
     private Connection connection;
 
-    public ConnectControl() {
+    public ConnectControl() { // 1
         {
             // Cau hinh properties
             String resourceName = "database.properties";
@@ -31,7 +31,7 @@ public class ConnectControl implements IConnect {
 
     // Tao ket noi den database
     @Override
-    public Connection connectToMySQL() {
+    public Connection connectToMySQL() { // 2
         connection = null;
 
         try {
@@ -70,6 +70,10 @@ public class ConnectControl implements IConnect {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 
     public static void main(String[] args) {

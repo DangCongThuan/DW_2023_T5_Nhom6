@@ -1,0 +1,2 @@
+2023-12-17 17-27-16	 	 	Tiến trình của config: 5 ở DW chưa hoàn thành
+2023-12-17 17-27-16	 	 	đã get dữ liệu cần thiết từ aggregate sang dim

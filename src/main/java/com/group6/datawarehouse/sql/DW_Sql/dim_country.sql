@@ -6,7 +6,7 @@ CREATE TABLE dim_country
     region	VARCHAR(512)
 );
 
-INSERT INTO dim_country (country_code, country_name, redim_currencygion) VALUES
+INSERT INTO dim_country (country_code, country_name, region) VALUES
 	('USA', 'United States', 'North America'),
 	('CHN', 'China', 'Asia'),
 	('IND', 'India', 'Asia'),

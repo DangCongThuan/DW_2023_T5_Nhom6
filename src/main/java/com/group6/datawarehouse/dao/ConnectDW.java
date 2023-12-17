@@ -37,7 +37,7 @@ public class ConnectDW implements IConnect {
 
             // Tạo kết nối
             connection = DriverManager.getConnection(url, userName, password);
-
+            System.out.println("Đã đã kết nốt đến DW");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -50,7 +50,7 @@ public class ConnectDW implements IConnect {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                System.out.println("Đã đóng kết nối đến MySQL.");
+                System.out.println("Đã đóng kết nối đến DW.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -82,5 +82,6 @@ public class ConnectDW implements IConnect {
         ConnectDW connectDW = new ConnectDW();
         System.out.println(connectDW.connectToMySQL());
         System.out.println(connectDW.url + connectDW.userName + connectDW.password);
+        connectDW.closeConnection();
     }
 }

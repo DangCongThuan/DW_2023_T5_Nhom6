@@ -44,12 +44,12 @@ public class HomeEx extends HttpServlet {
                     PrintWriter out = resp.getWriter();
                     for (Currency c : arrayListTienTe) {
                         out.println("<div class=\"row\">" +
-                                "  <div class=\"item1 border_1\">" + c.getCurrencyName() + "</div>\n" +
-                                "                        <div class=\"item2 border_1\">" + c.getCurrencySymbol() + "</div>\n" +
-                                "                        <div class=\"item3 border_1\">" + c.getBuyCash() + "</div>\n" +
-                                "                        <div class=\"item4 border_1\">" + c.getBuyTransfer() + "</div>\n" +
-                                "                        <div class=\"item5 border_1\">" + c.getSaleCash() + "</div>\n" +
-                                "                        <div class=\"item5 border_1\">" + c.getSaleTransfer() + "</div>" +
+                                "  <div class=\"item1 border_1\">" + c.getCurrency_name() + "</div>\n" +
+                                "                        <div class=\"item2 border_1\">" + c.getCurrency_code() + "</div>\n" +
+                                "                        <div class=\"item3 border_1\">" + c.getBuy_cash() + "</div>\n" +
+                                "                        <div class=\"item4 border_1\">" + c.getBuy_Transfer() + "</div>\n" +
+                                "                        <div class=\"item5 border_1\">" + c.getSale_Cash() + "</div>\n" +
+                                "                        <div class=\"item5 border_1\">" + c.getSale_Transfer() + "</div>" +
                                 " </div>")
                         ;
                     }
