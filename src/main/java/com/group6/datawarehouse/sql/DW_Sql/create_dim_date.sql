@@ -2,7 +2,7 @@ use dw;
 
 CREATE TABLE dim_date 
 (
-	Id INT auto_increment primary key,
+	id INT auto_increment primary key,
     full_date	Date,
     day_of_week	VARCHAR(20),
     day_of_month	INT,

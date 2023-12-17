@@ -1,6 +1,6 @@
 CREATE TABLE dim_country 
 (
-	Id INT auto_increment primary key,
+	id INT auto_increment primary key,
     country_code	VARCHAR(512),
     country_name	VARCHAR(512),
     region	VARCHAR(512)
