@@ -1,18 +1,34 @@
 package com.group6.datawarehouse.service;
 
-import com.group6.datawarehouse.dao.ConnectControl;
 import com.group6.datawarehouse.dao.ConnectDW;
 import com.group6.datawarehouse.dao.ConnectStaging;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class StagingToDW {
+public class LoadToDW {
 
     public static void main(String[] args) throws SQLException {
+        int stagingCheckCount = 0;
+        while (stagingCheckCount < 10) {
+            stagingCheckCount++;
+            if (ControlService.checkLogExists(3, "Done")) {
+                break;
+            }
+            else if (stagingCheckCount >= 10) {
+                ControlService.insertLog(5, "Error", "Dữ liệu từ staging ngày hôm nay không có");
+                return;
+            } else {
+                try {
+                    System.out.println("Chương trình đang đợi dữ liệu từ staging, xin vui lòng chờ 1 phút");
+                    Thread.sleep(60 * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         while(true) {
             if (ControlService.checkLogExists(5, "Done")) {
                 System.out.println("Hôm nay đã load dữ liệu từ staging sang data warehouse");
@@ -22,6 +38,7 @@ public class StagingToDW {
                 try {
                     System.out.println("Chương trình đang thực hiện load dữ liệu, xin vui lòng chờ 1 tiếng");
                     Thread.sleep(60 * 1000);
+                    continue;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -37,7 +54,7 @@ public class StagingToDW {
                 ControlService.insertLog(5, "Done", "Load dữ liệu từ staging vào data warehouse thành công");
             } catch (SQLException e) {
                 connectDW.rollback();
-                ControlService.insertLog(5, "Error", "Chuẩn bị load dữ liệu từ staging vào data warehouse");
+                ControlService.insertLog(5, "Error", "Load dữ liệu từ staging vào data warehouse không thành công");
                 e.printStackTrace();
             } finally {
                 connectDW.setAutoCommit(true);
