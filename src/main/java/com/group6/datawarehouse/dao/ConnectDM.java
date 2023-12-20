@@ -1,5 +1,7 @@
 package com.group6.datawarehouse.dao;
 
+import com.group6.datawarehouse.service.DWIntoDM;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -12,7 +14,7 @@ public class ConnectDM implements IConnect {
     private String url, userName, password;
     private Connection connection;
 
-    public ConnectDM() {// 1
+    public ConnectDM() {// step 1
         {
             String resourceName = "database.properties"; // could also be a constant
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -27,6 +29,8 @@ public class ConnectDM implements IConnect {
         }
     }
 
+    // step 8 : Connect DB DM?
+    // step 9 : create  or insert File log log_yyyy_mm_dd.txt
     @Override
     public Connection connectToMySQL() {
         connection = null;
@@ -35,11 +39,15 @@ public class ConnectDM implements IConnect {
             // Đăng ký Driver JDBC
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            // Tạo kết nối
+            // step 8 : Connect DB DM?
             connection = DriverManager.getConnection( url, userName, password);
             System.out.println("Đã kết nối đến DM");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+            DWIntoDM dwIntoDM=new DWIntoDM();
+            // step 9 :.insert_log?stt=Error ,update_configs?stt=Error
+            dwIntoDM.insert_log(7,"Error","Không kết nối được database DM");
+            dwIntoDM.update_config(7,"Error");
         }
 
         return connection;
@@ -82,7 +90,6 @@ public class ConnectDM implements IConnect {
     public static void main(String[] args) {
         ConnectDM connectDM=new ConnectDM();
         System.out.println(connectDM.url +connectDM.userName+connectDM.password);
-
         connectDM.connectToMySQL();
     }
 }

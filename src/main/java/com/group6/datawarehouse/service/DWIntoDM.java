@@ -24,37 +24,36 @@ public class DWIntoDM {
     private ConnectDM connectDM;
     private PreparedStatement preparedStatement;
     private String date;
+    private boolean flag;
 
-    public void connectControl() {// 1 và 2
-        connectControl = new ConnectControl();
-        try {
-            connectControl.connectToMySQL();
-        } catch (Exception e) {
-//            createLogFile();
-        }
-
-
+    public void connectControl() {
+        connectControl = new ConnectControl();  // step 1 : load initialization from file database.properties get (severName,userID,password portNumber,dbName)
+        connectControl.connectToMySQL();   // step 2 : 2.Connect DB control
     }
 
     public void connectDW() {
+        // step 1 : load initialization from file database.properties get (severName,userID,password portNumber,dbName)
+        // step 2 : 2.Connect DB control
         connectDW = new ConnectDW();
-        try {
-            connectDW.connectToMySQL();
-        } catch (Exception ignored) {
-
-        }
-
+        connectDW.connectToMySQL();
     }
 
     public void connectDM() {
+        // step 8 : Connect DB DM?
+        // step 9 : insert_log?stt=Error ,update_configs?stt=Error
         connectDM = new ConnectDM();
         connectDM.connectToMySQL();
+
     }
 
     /*
     check status của DW
      */
     public void checkStatusDW() {
+        // step 1 : load initialization from file database.properties get (severName,userID,password portNumber,dbName)
+        // step 2 : Connect DB control
+        connectControl();
+        //step 4 : get status in table config:status: ="?"
         String sql = "SELECT *  FROM config WHERE id=? OR id=?";
         try (
                 // Tạo đối tượng PreparedStatement để thực hiện lệnh SQL
@@ -76,13 +75,16 @@ public class DWIntoDM {
                 liststt.add(stt);
                 listsid.add(id);
             }
+            // step 5 : Check the status is done or not?
             xuLiStatus(liststt, listsid);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
     }
 
+    // step 5 : Check the status is done or not?
     public void xuLiStatus(List<String> liststt, List<Integer> listsid) {
+        // step 6: create or insert File log log_yyyy_mm_dd.txt
         if (!(liststt.get(0).equals("Done")) && !(liststt.get(1).equals("Done"))) {
             System.out.println(liststt.get(0));
             System.out.println(liststt.get(1));
@@ -96,50 +98,113 @@ public class DWIntoDM {
 
         if (liststt.get(0).equals("Done")) {
             loadDate(listsid.get(0), "Done");
+            // step 7 : 7.insert_log?stt=Prepared ,update_configs?stt=Prepared
+            update_config(7, "Prepared");
             insert_log(7, "Prepared", "Tiến trình của config: " + listsid.get(0) + " ở DW đã hoàn thành,Chuẩn bị lấy dữ liệu");
         } else {
+            // step 6: create or insert File log log_yyyy_mm_dd.txt
             createLogFile(7, "Tiến trình của config: " + listsid.get(0) + " ở DW chưa hoàn thành");
         }
         if (liststt.get(1).equals("Done")) {
             loadDate(listsid.get(1), "Done");
+            // step 7 : 7.insert_log?stt=Prepared ,update_configs?stt=Prepared
+            update_config(7, "Prepared");
             insert_log(7, "Prepared", "Tiến trình của config: " + listsid.get(1) + " ở DW đã hoàn thành,Chuẩn bị lấy dữ liệu");
         } else {
+            // step 6: create or insert File log log_yyyy_mm_dd.txt
             createLogFile(7, "Tiến trình của config: " + listsid.get(1) + " ở DW chưa hoàn thành");
         }
         if ((liststt.get(0).equals("Done")) || (liststt.get(1).equals("Done"))) {
             System.out.println("action done");
-            update_config(7, "Prepared");
-            loadDataFromDWtoDm();
+            // step 8 : Connect DB DM?
+            // step 9 : create  or insert File log log_yyyy_mm_dd.txt
+            // step 10 : Check whether the day's data has been loaded or not?
+            // step 11 : insert_log?stt=Done ,update_configs?stt=Done
+            // step 12 : insert_log?stt=Crawling ,update_configs?stt=Crawling
+            checkFlag(date);
         }
     }
 
-    public void loadDataFromDWtoDm() {//10
+    public void checkFlag(String date) {
+        // step 8 : Connect DB DM?
+        connectDM();
+
+        // step 10 : Check whether the day's data has been loaded or not?
+        String sql = "SELECT full_date FROM dm.aggregate ar WHERE ar.full_date=?";
+        String fdate = "";
+        try (
+                // Tạo đối tượng PreparedStatement để thực hiện lệnh SQL
+                PreparedStatement preparedStatement = connectDM.getConnection().prepareStatement(sql);
+                // Đặt giá trị cho các tham số trong câu lệnh UPDATE
+
+        ) {
+            preparedStatement.setString(1, date);
+            // Thực hiện câu lệnh
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                fdate = resultSet.getString("full_date");
+                System.out.println(fdate);
+                if (fdate.isEmpty() || fdate == null) {
+                    setflag(false);
+                } else {
+                    setflag(true);
+                }
+                System.out.println("fdate: " + fdate);
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        if (flag == true) {
+
+            // step 11 : insert_log?stt=Done ,update_configs?stt=Done
+            insert_log(7, "Done", "Process này đã hoàn thành trước đó");
+        } else {
+            // step 12 : insert_log?stt=Crawling ,update_configs?stt=Crawling
+            System.out.println(" flag false");
+            update_config(7, "Crawling");
+            insert_log(7, "Crawling", "Tiến hành lấy dữ liệu về");
+            // step 13 : loadDataFromDWtoDm?
+            loadDataFromDWtoDm();
+        }
+    }
+    // step 13 : loadDataFromDWtoDm?
+    // step 14 : insert_log?stt=Error ,update_configs?stt=Error
+    // step 15 : insert_log?stt=Done ,update_configs?stt=Done
+
+    public void loadDataFromDWtoDm() {
+        // step 13 : loadDataFromDWtoDm?
         String storedProcedureCall = "{call InsertIntoAggregate(?)}";
-        String storedProcedureCall2="{call InsertIntoDIM(?)}";
+        String storedProcedureCall2 = "{call InsertIntoDIM(?)}";
         try (CallableStatement callableStatement = connectDM.getConnection().prepareCall(storedProcedureCall)) {
             // Truyền tham số cho stored procedure
-            callableStatement.setString(1,date);
+            callableStatement.setString(1, date);
             // Thực thi stored procedure
             callableStatement.execute();
             System.out.println("Stored procedure executed successfully.");
+
+            // step 15 : insert_log?stt=Done ,update_configs?stt=Done
             update_config(7, "Done");
             insert_log(7, "Done", "Đã load xong dữ liệu từ dw sang bảng aggregate của dm");
         } catch (SQLException e) {
+            // step 14 : insert_log?stt=Error ,update_configs?stt=Error
+            update_config(7, "Error");
             insert_log(7, "Error", "Lỗi khi load dữ liệu từ dw sang bảng aggregate của dm");
             e.printStackTrace();
         }
         try (CallableStatement callableStatement2 = connectDM.getConnection().prepareCall(storedProcedureCall2)) {
             // Truyền tham số cho stored procedure
-            callableStatement2.setString(1,date);
+            callableStatement2.setString(1, date);
             // Thực thi stored procedure
             callableStatement2.execute();
             System.out.println("Stored procedure executed successfully.");
-            createLogFile(7,"đã get dữ liệu cần thiết từ aggregate sang dim");
+            insert_log(7, "Done", "đã get dữ liệu cần thiết từ aggregate sang dim");
         } catch (SQLException e) {
             insert_log(7, "Error", "Lỗi khi load dữ liệu từ aggreate sang bảng dim của dm");
             e.printStackTrace();
         }
-
+        connectControl.closeConnection();
+        connectDM.closeConnection();
     }
 
     public String loadDate(int id, String str) {
@@ -181,8 +246,8 @@ public class DWIntoDM {
         setDate(formattedDate);
         return formattedDate;
     }
-
-    public void insert_log(int config_id, String stt, String description) {//5
+    // step 9,11,12,14,15
+    public void insert_log(int config_id, String stt, String description) {
         try {
             // Câu lệnh INSERT
             String insertQuery = "INSERT INTO log (id_config, stt, description, time) VALUES (?, ?, ?,CURRENT_TIMESTAMP)";
@@ -203,7 +268,8 @@ public class DWIntoDM {
     /*
     Hàm update config trong db control
      */
-    public void update_config(int id, String stt) {//5
+    // step 9,11,12,14,15
+    public void update_config(int id, String stt) {
         String sql = "UPDATE config SET stt = ? WHERE id = ?";
         try (
                 // Tạo đối tượng PreparedStatement để thực hiện lệnh SQL
@@ -219,7 +285,7 @@ public class DWIntoDM {
             System.err.println(e.getMessage());
         }
     }
-
+    // step 3,6
     public void createLogFile(int id, String content) {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
@@ -228,7 +294,7 @@ public class DWIntoDM {
         // Định dạng ngày thành chuỗi "yyyy-MM-dd"
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = currentDate.format(formatter);
-        String filePath = "src\\main\\resources\\log\\DM" + "log_" + currentDate + ".txt";
+        String filePath = "C:\\Users\\trand\\OneDrive\\Máy tính\\datawarehourse\\log\\DM\\" + currentDate + ".txt";
         try (FileWriter fileWriter = new FileWriter(filePath, true);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             // Nếu file không tồn tại, FileWriter sẽ tạo file mới
@@ -245,6 +311,9 @@ public class DWIntoDM {
             System.err.println("Lỗi khi ghi vào file: " + e.getMessage());
             e.printStackTrace();
         }
+        connectControl.closeConnection();
+        connectDW.closeConnection();
+        connectDM.closeConnection();
     }
 
     public String getDate() {
@@ -255,11 +324,16 @@ public class DWIntoDM {
         this.date = date;
     }
 
+    public boolean getflag() {
+        return flag;
+    }
+
+    public void setflag(boolean checkflag) {
+        this.flag = flag;
+    }
+
     public static void main(String[] args) {
         DWIntoDM dwIntoDM = new DWIntoDM();
-        dwIntoDM.connectControl();
-        dwIntoDM.connectDW();
-        dwIntoDM.connectDM();
-        dwIntoDM.checkStatusDW();
+        dwIntoDM.checkStatusDW();// Step 1,2,3,4,5,6,7,8,9,10,11,12,13,14
     }
 }
