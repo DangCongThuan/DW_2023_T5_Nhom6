@@ -43,8 +43,7 @@
     <div class="container max_w_website">
         <p class="title" id="exchangeRateTitle">Tỷ giá ngân hàng</p>
         <div class="table">
-                <span class="size_20px" id="updateDateInfo">Tỷ giá được cập nhật vào ngày<span class="size_20px"> 23/10/2023 </span>lúc
-                    00h00 và chỉ mang tính chất tham khảo
+                <span class="size_20px" id="updateDateInfo">Tỷ giá được cập nhật vào ngày<span class="size_20px"></span> và chỉ mang tính chất tham khảo
                 </span>
             <div class="wrapper_table">
                 <div class="row">
@@ -155,7 +154,7 @@
         sessionStorage.setItem("date", selectedDate);
         var selectedBank = sessionStorage.getItem("bank");
         var dateInfoElement = document.getElementById('updateDateInfo');
-        dateInfoElement.innerHTML = 'Tỷ giá được cập nhật vào ngày <span class="size_20px">' + selectedDate + '</span> lúc 00h00 và chỉ mang tính chất tham khảo';
+        dateInfoElement.innerHTML = 'Tỷ giá được cập nhật vào ngày <span class="size_20px">' + selectedDate + '</span> và chỉ mang tính chất tham khảo';
         // Gọi Ajax hoặc chuyển giá trị ngày vào một biểu mẫu để gửi lên server
         // Ví dụ sử dụng Ajax:
         var xhr = new XMLHttpRequest();
