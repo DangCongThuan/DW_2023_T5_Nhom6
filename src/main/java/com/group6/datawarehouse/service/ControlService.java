@@ -68,7 +68,8 @@ public class ControlService {
 
                         // Kiểm tra thời gian mới nhất có quá 1 giờ so với thời gian hiện tại hay không
 
-                        return (currentTime.getTime() - latestTime.getTime()) <= (1 * 3 * 60 * 1000);
+//                        return (currentTime.getTime() - latestTime.getTime()) <= (1 * 3 * 60 * 1000);
+                        return (currentTime.getTime() - latestTime.getTime()) <= (3* 60 * 1000);
                     }
                 }
             }

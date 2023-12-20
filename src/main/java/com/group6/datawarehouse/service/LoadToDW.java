@@ -23,7 +23,7 @@ public class LoadToDW {
             } else {
                 try {
                     System.out.println("Chương trình đang đợi dữ liệu từ staging, xin vui lòng chờ 1 phút");
-                    Thread.sleep(60 * 1000);
+                    Thread.sleep(10 * 1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -37,7 +37,7 @@ public class LoadToDW {
             if (ControlService.checkValidProcess(5, "Crawling")) {
                 try {
                     System.out.println("Chương trình đang thực hiện load dữ liệu, xin vui lòng chờ 1 tiếng");
-                    Thread.sleep(60 * 1000);
+                    Thread.sleep(1 * 1000);
                     continue;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
