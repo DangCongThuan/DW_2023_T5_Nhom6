@@ -1,5 +1,7 @@
 package com.group6.datawarehouse.dao;
 
+import com.group6.datawarehouse.service.DWIntoDM;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -12,7 +14,7 @@ public class ConnectControl implements IConnect {
     private String url, userName, password;
     private Connection connection;
 
-    public ConnectControl() { // 1
+    public ConnectControl() { // step 1 : load initialization from file database.properties get (severName,userID,password portNumber,dbName)
         {
             // Cau hinh properties
             String resourceName = "database.properties";
@@ -31,7 +33,7 @@ public class ConnectControl implements IConnect {
 
     // Tao ket noi den database
     @Override
-    public Connection connectToMySQL() { // 2
+    public Connection connectToMySQL() {  // step 2 : 2.Connect DB control
         connection = null;
 
         try {
@@ -43,6 +45,9 @@ public class ConnectControl implements IConnect {
             System.out.println("Đã kết nối đến Control.");
         } catch (ClassNotFoundException | SQLException e) {
             System.err.println("Error connecting to the database Control: " + e.getMessage());
+            DWIntoDM dwIntoDM=new DWIntoDM();
+            // step 3 :create or insert File log log_yyyy_mm_dd.txt
+            dwIntoDM.createLogFile(0, "Không kết nối được đến database Control");
         }
         return connection;
     }
